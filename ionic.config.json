@@ -1,0 +1,7 @@
+{
+  "name": "quenchYoThirst",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
