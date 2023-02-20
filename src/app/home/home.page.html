@@ -18,26 +18,24 @@
   <ion-list>
     <ion-item>
       <ion-label stacked>Height</ion-label>
-      <ion-input type="text" placeholder="input height here"></ion-input>
+      <ion-input type="text" [(ngModel)]="height" placeholder="input height here"></ion-input>
       <ion-button slot="end">
         set
       </ion-button>
     </ion-item>
     <ion-item>
       <ion-label stacked>Weight</ion-label>
-      <ion-input type="text" placeholder="input weight here"></ion-input>
+      <ion-input type="text" [(ngModel)]="weight" placeholder="input weight here"></ion-input>
       <ion-button slot="end">
         set
       </ion-button>
     </ion-item>
+
+    <ion-item>
+      <ion-label stacked>Current Position</ion-label>
+      <ion-input type="text" [value]="'(' + latitude + ', ' + longitude + ')'"></ion-input>
+    </ion-item>
+
   </ion-list>
   
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-	<p>hello there!</p>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-    <ion-button>
-      random button
-    </ion-button>
-  </div>
 </ion-content>
