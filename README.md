@@ -17,6 +17,7 @@ npm insatll firebase
 ng add @angular/fire
 ```
 [Firebase repo website](https://console.firebase.google.com/u/0/project/quench-yo-thirst-uci/overview)
+
 To install healthkid extension
 ```
 npm install cordova-plugin-health
