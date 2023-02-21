@@ -10,10 +10,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { HealthKit } from '@awesome-cordova-plugins/health-kit/ngx';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { provideStorage,getStorage } from '@angular/fire/storage';
+
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule,
+            provideFirebaseApp(() => initializeApp(environment.firebase)), 
+            provideAuth(() => getAuth()), provideFirestore(() => getFirestore()), provideStorage(() => getStorage())],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, HealthKit,
               { provide: 'API_KEY', useValue: environment.apiKey }],
   bootstrap: [AppComponent],

@@ -4,7 +4,16 @@
 
 export const environment = {
   production: false,
-  apiKey: 'OpenWeather_API_KEY'
+  apiKey: 'OpenWeather_API_KEY',
+  firebase: {
+    apiKey: "AIzaSyBVD67YFUBLEmE1xiRpW4dMhjRc38BJ24U",
+    authDomain: "quench-yo-thirst-uci.firebaseapp.com",
+    projectId: "quench-yo-thirst-uci",
+    storageBucket: "quench-yo-thirst-uci.appspot.com",
+    messagingSenderId: "588521470031",
+    appId: "1:588521470031:web:99bd430be55de87b11123a",
+    measurementId: "G-5N67CQPBT4"
+  }
 };
 
 /*
