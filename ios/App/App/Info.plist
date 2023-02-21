@@ -47,7 +47,11 @@
 	</array>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>update health usage</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>update location for weather</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>update location for weather</string>
 </dict>
 </plist>
