@@ -41,6 +41,11 @@
       <ion-input type="text" [value]="temp + '°F'"></ion-input>
     </ion-item>
 
+	<ion-item>
+		<ion-label stacked>Steps in last 24 Hours</ion-label>
+		<ion-input type="text" [(ngModel)]="stepcount" readonly></ion-input>
+	</ion-item>
+
   </ion-list>
   
 </ion-content>
