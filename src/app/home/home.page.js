@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -46,21 +49,40 @@ exports.HomePage = void 0;
 var core_1 = require("@angular/core");
 var geolocation_1 = require("@capacitor/geolocation");
 var HomePage = /** @class */ (function () {
-    function HomePage() {
+    function HomePage(http, healthKit, apiKey) {
+        this.http = http;
+        this.healthKit = healthKit;
+        this.apiKey = apiKey;
+        this.latitude = 0;
+        this.longitude = 0;
+        this.height = "";
+        this.weight = "";
+        this.temp = 0;
         this.getCurrentPosition();
+        this.getWeather();
     }
     HomePage.prototype.getCurrentPosition = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var coordinates;
+            var position;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, geolocation_1.Geolocation.getCurrentPosition()];
                     case 1:
-                        coordinates = _a.sent();
-                        console.log('Current position:', coordinates);
+                        position = _a.sent();
+                        this.latitude = position.coords.latitude;
+                        this.longitude = position.coords.longitude;
                         return [2 /*return*/];
                 }
             });
+        });
+    };
+    HomePage.prototype.getWeather = function () {
+        var _this = this;
+        // Change this later so api key is hidden
+        var url = "https://api.openweathermap.org/data/2.5/weather?lat=".concat(this.latitude, "&lon=").concat(this.longitude, "&appid=").concat(this.apiKey);
+        this.http.get(url).subscribe(function (data) {
+            _this.temp = data.main.temp;
+            console.log("Hello");
         });
     };
     HomePage = __decorate([
@@ -68,7 +90,8 @@ var HomePage = /** @class */ (function () {
             selector: 'app-home',
             templateUrl: 'home.page.html',
             styleUrls: ['home.page.scss']
-        })
+        }),
+        __param(2, (0, core_1.Inject)('API_KEY'))
     ], HomePage);
     return HomePage;
 }());

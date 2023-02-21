@@ -8,11 +8,14 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { HealthKit } from '@awesome-cordova-plugins/health-kit/ngx';
+import { environment } from '../environments/environment';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, HealthKit],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, HealthKit,
+              { provide: 'API_KEY', useValue: environment.apiKey }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
