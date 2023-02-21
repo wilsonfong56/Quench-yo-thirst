@@ -5,7 +5,11 @@
 ionic serve
 ```
 
-## Extra dependencies you need
+## Additional dependencies
+To install angular cli
+```
+npm install -g @angular/cli
+```
 To install geolocation extention
 ```
 npm install @capacitor/geolocation
@@ -27,4 +31,10 @@ ionic cap sync
 To install command line input(CLI) extension for angular
 ```
 ng add @angular/cli
+```
+Issues with Authorization Code Error:
+Try the following before ng add command
+```
+firebase login:ci
+firebase login
 ```
