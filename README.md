@@ -35,6 +35,6 @@ ng add @angular/cli
 Issues with Authorization Code Error:
 Try the following before ng add command
 ```
-firebase login:ci
+firebase login:ci     # log in to an account
 firebase login
 ```
