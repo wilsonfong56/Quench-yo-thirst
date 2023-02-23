@@ -1,3 +1,35 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu contentId="main-m">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>QUENCH</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-menu-toggle>
+        <ion-item>
+          <ion-label routerLink="/home">HOME</ion-label>
+        </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item>
+            <ion-label routerLink="/p1">PROFILE</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item>
+            <ion-label routerLink="/p2">RECOMMENDATION</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-menu-toggle>
+          <ion-item>
+            <ion-label routerLink="/p3">URINARY UPDATE</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+  
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id="main-m"></ion-router-outlet>
 </ion-app>

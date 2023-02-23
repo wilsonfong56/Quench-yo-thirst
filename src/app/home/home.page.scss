@@ -25,3 +25,15 @@
 #container a {
   text-decoration: none;
 }
+
+ion-content {
+  --background: url("/assets/waterBackground.jpg") no-repeat center center / cover;
+}
+
+ion-toolbar {
+  --opacity: 0
+}
+
+ion-menu-button {
+  --color: #000;
+}
