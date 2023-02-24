@@ -10,9 +10,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { HealthKit } from '@awesome-cordova-plugins/health-kit/ngx';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { initializeApp,provideFirebaseApp , getApp} from '@angular/fire/app';
 import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 
 import { AngularFireModule } from '@angular/fire/compat';

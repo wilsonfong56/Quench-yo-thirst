@@ -10,21 +10,6 @@
 <ion-content class="ion-padding" fullscreen>
   <ion-list lines="inset">
     <ion-item>
-      <ion-label stacked>Height</ion-label>
-      <ion-input type="text" [(ngModel)]="height" placeholder="input height here"></ion-input>
-      <ion-button slot="end">
-        set
-      </ion-button>
-    </ion-item>
-    <ion-item>
-      <ion-label stacked>Weight</ion-label>
-      <ion-input type="text" [(ngModel)]="weight" placeholder="input weight here"></ion-input>
-      <ion-button slot="end">
-        set
-      </ion-button>
-    </ion-item>
-
-    <ion-item>
       <ion-label stacked>Current Position</ion-label>
       <ion-input type="text" [value]="'(' + latitude + ', ' + longitude + ')'"></ion-input>
     </ion-item>
@@ -38,7 +23,29 @@
     <ion-label stacked>Steps in last 24 Hours</ion-label>
     <ion-input type="text" [(ngModel)]="stepcount" readonly></ion-input>
   </ion-item>
+    <ion-item>
+      <ion-label stacked>Height:</ion-label>
+      <ion-input type="text" [(ngModel)]="height" placeholder="input height here"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>Weight:</ion-label>
+      <ion-input type="text" [(ngModel)]="weight" placeholder="input weight here"></ion-input>
+    </ion-item>
 
   </ion-list>
+
+  <br>
+  <ion-button expand="block" (click)="buttonTest()">
+    set height / weight
+  </ion-button>
+
+
+  <ul>
+    <li *ngFor="let item of item$ | async">
+      Name: {{ item.name }} <br>
+      Feet: {{ item.height }}  <br>
+      Inches: {{ item.weight }} <br>
+      <br>
+  </ul>
   
 </ion-content>

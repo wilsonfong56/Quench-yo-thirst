@@ -4,6 +4,17 @@ import { HealthKit, HealthKitOptions} from '@awesome-cordova-plugins/health-kit/
 import { Geolocation } from '@capacitor/geolocation';
 import { Platform } from '@ionic/angular';
 
+import { Firestore, collectionData, collection } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+import { getFirestore } from 'firebase/firestore';
+
+interface Item {
+  height: number,
+  weight: number,
+  name: string,
+};
+
+
 @Component({
   selector: 'app-p1',
   templateUrl: './p1.page.html',
@@ -12,17 +23,21 @@ import { Platform } from '@ionic/angular';
 export class P1Page implements OnInit {
   latitude = 0;
   longitude = 0;
-  height = "";
-  weight = "";
+  height = 0;
+  weight = 0;
   temp = 0;
   stepcount = "No Data";
+
+  item$: Observable<Item[]>;
 
   constructor(
     private http: HttpClient,
     private healthKit: HealthKit,
     @Inject('API_KEY') private apiKey: string,
-	  private plt: Platform)  { 
+	  private plt: Platform,
+    firestore: Firestore)  { 
 
+    console.log("API KEY:", this.apiKey)
     this.ngOnInit();
 
     this.plt.ready().then(() => {
@@ -38,7 +53,11 @@ export class P1Page implements OnInit {
         })
         }
       });
-	  });
+    });
+
+    const temp = collection(firestore, 'profile');
+    this.item$ = collectionData(temp) as Observable<Item[]>
+
   }
 
   async loadHealthData() {
@@ -75,5 +94,14 @@ export class P1Page implements OnInit {
     this.http.get(url).subscribe((data: any) => {
       this.temp = data.main.temp;
     });
+  }
+
+  async buttonTest() {
+    console.log("HEIGHT:", this.height)
+    console.log("WEIGHT:", this.weight)
+
+    //const db = getFirestore()
+    //const temp2 = {name: "joe", height: this.height, weight: this.weight}
+    //const res = await collection(db, "profile").id("testDoc").set(temp2)
   }
 }
