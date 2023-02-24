@@ -13,7 +13,7 @@ import { P2Page } from './p2.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    P2PageRoutingModule
+    P2PageRoutingModule,
   ],
   declarations: [P2Page]
 })

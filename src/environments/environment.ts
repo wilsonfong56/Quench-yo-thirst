@@ -12,7 +12,8 @@ export const environment = {
     storageBucket: "quench-yo-thirst-uci.appspot.com",
     messagingSenderId: "588521470031",
     appId: "1:588521470031:web:99bd430be55de87b11123a",
-    measurementId: "G-5N67CQPBT4"
+    measurementId: "G-5N67CQPBT4",
+    databaseURL: "https://quench-yo-thirst-uci-default-rtdb.firebaseio.com"
   }
 };
 

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { TestService } from 'src/environments/services/test.service';
 
 @Component({
   selector: 'app-p2',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class P2Page implements OnInit {
 
-  constructor() { }
+  //@Input() height!: string;
+
+  constructor(public _testService: TestService) { }
 
   ngOnInit() {
+    console.log(this._testService.myData)
   }
 
 }

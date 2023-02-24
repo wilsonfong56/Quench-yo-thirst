@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { HealthKit, HealthKitOptions} from '@awesome-cordova-plugins/health-kit/ngx';
 import { Geolocation } from '@capacitor/geolocation';
 import { Platform } from '@ionic/angular';
+import { AngularFireDatabase} from '@angular/fire/compat/database';
 
 @Component({
   selector: 'app-p1',
@@ -21,10 +22,10 @@ export class P1Page implements OnInit {
   constructor(
     private http: HttpClient,
     private healthKit: HealthKit,
+    private db: AngularFireDatabase,
     @Inject('API_KEY') private apiKey: string,
 	private plt: Platform)  { 
 
-    console.log(this.apiKey)
     this.ngOnInit();
 
 	this.plt.ready().then(() => {
@@ -76,7 +77,6 @@ export class P1Page implements OnInit {
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${this.latitude}&lon=${this.longitude}&appid=${this.apiKey}&units=imperial`; 
     this.http.get(url).subscribe((data: any) => {
       this.temp = data.main.temp;
-      console.log(`Current temp: ${this.temp}`)
     });
   }
 }

@@ -8,6 +8,7 @@ export const environment = {
     authDomain: 'quench-yo-thirst-uci.firebaseapp.com',
     messagingSenderId: '588521470031',
     measurementId: 'G-5N67CQPBT4',
+    databaseURL: "https://quench-yo-thirst-uci-default-rtdb.firebaseio.com"
   },
   production: true
 };
