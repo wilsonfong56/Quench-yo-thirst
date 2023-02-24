@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TestService } from 'src/environments/services/test.service';
 
 @Component({
@@ -7,8 +7,6 @@ import { TestService } from 'src/environments/services/test.service';
   styleUrls: ['./p2.page.scss'],
 })
 export class P2Page implements OnInit {
-
-  //@Input() height!: string;
 
   constructor(public _testService: TestService) { }
 

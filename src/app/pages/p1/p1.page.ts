@@ -1,10 +1,8 @@
 import { Component, Inject, OnInit} from '@angular/core';
-// import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HealthKit, HealthKitOptions} from '@awesome-cordova-plugins/health-kit/ngx';
 import { Geolocation } from '@capacitor/geolocation';
 import { Platform } from '@ionic/angular';
-import { AngularFireDatabase} from '@angular/fire/compat/database';
 
 @Component({
   selector: 'app-p1',
@@ -22,25 +20,24 @@ export class P1Page implements OnInit {
   constructor(
     private http: HttpClient,
     private healthKit: HealthKit,
-    private db: AngularFireDatabase,
     @Inject('API_KEY') private apiKey: string,
-	private plt: Platform)  { 
+	  private plt: Platform)  { 
 
     this.ngOnInit();
 
-	this.plt.ready().then(() => {
-		this.healthKit.available().then(available => {
-		  if (available) {
-			// Request all permissions up front if you like to
-			var options: HealthKitOptions = {
-			  readTypes: ['HKQuantityTypeIdentifierHeight', 'HKQuantityTypeIdentifierStepCount', 'HKWorkoutTypeIdentifier', 'HKQuantityTypeIdentifierActiveEnergyBurned', 'HKQuantityTypeIdentifierDistanceCycling'],
-			  writeTypes: ['HKQuantityTypeIdentifierHeight', 'HKWorkoutTypeIdentifier', 'HKQuantityTypeIdentifierActiveEnergyBurned', 'HKQuantityTypeIdentifierDistanceCycling']
-			}
-			this.healthKit.requestAuthorization(options).then(_ => {
-			  this.loadHealthData();
-			})
-		  }
-		});
+    this.plt.ready().then(() => {
+      this.healthKit.available().then(available => {
+        if (available) {
+        // Request all permissions up front if you like to
+        var options: HealthKitOptions = {
+          readTypes: ['HKQuantityTypeIdentifierHeight', 'HKQuantityTypeIdentifierStepCount', 'HKWorkoutTypeIdentifier', 'HKQuantityTypeIdentifierActiveEnergyBurned', 'HKQuantityTypeIdentifierDistanceCycling'],
+          writeTypes: ['HKQuantityTypeIdentifierHeight', 'HKWorkoutTypeIdentifier', 'HKQuantityTypeIdentifierActiveEnergyBurned', 'HKQuantityTypeIdentifierDistanceCycling']
+        }
+        this.healthKit.requestAuthorization(options).then(_ => {
+          this.loadHealthData();
+        })
+        }
+      });
 	  });
   }
 
