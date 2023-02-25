@@ -23,8 +23,8 @@ interface Item {
 export class P1Page implements OnInit {
   latitude = 0;
   longitude = 0;
-  height = 0;
-  weight = 0;
+  height?: number;
+  weight?: number;
   temp = 0;
   stepcount = "No Data";
 
