@@ -23,6 +23,8 @@ interface Item {
 export class P1Page implements OnInit {
   latitude = 0;
   longitude = 0;
+  age?: number;
+  gender?: string;
   height?: number;
   weight?: number;
   temp = 0;
