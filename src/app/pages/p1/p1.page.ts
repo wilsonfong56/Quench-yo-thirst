@@ -5,6 +5,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { Platform } from '@ionic/angular';
 
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
+import { query, where, getDocs } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { getFirestore } from 'firebase/firestore';
 
@@ -21,6 +22,8 @@ interface Item {
   styleUrls: ['./p1.page.scss'],
 })
 export class P1Page implements OnInit {
+  email?: string;
+  password?: string;
   latitude = 0;
   longitude = 0;
   age?: number;
@@ -58,9 +61,33 @@ export class P1Page implements OnInit {
       });
     });
 
+    // "admin@uci.edu"
+    this.queryData(firestore, "fake@gmail.com");
     const temp = collection(firestore, 'profile');
     this.item$ = collectionData(temp) as Observable<Item[]>
 
+  }
+
+  async queryData(firestore: Firestore, email: string) {
+    const profileDatabase = collection(firestore, 'profile');
+    const q = query(profileDatabase, where("email", "==", email));
+    const queryTester = await getDocs(q);
+    if (queryTester.size == 0) {
+      // users need to input their biometric data
+
+    } else if (queryTester.size == 1) {
+      // users have created the accounts, and we need to load their previous data
+
+    }
+    console.log(queryTester.size);
+    queryTester.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data());
+    })
+  }
+
+  async RefreshData() {
+    // refresh the page after user pressed submit button
+    
   }
 
   async loadHealthData() {
@@ -116,7 +143,7 @@ export class P1Page implements OnInit {
   async buttonTest() {
     console.log("HEIGHT:", this.height)
     console.log("WEIGHT:", this.weight)
-
+    
     //const db = getFirestore()
     //const temp2 = {name: "joe", height: this.height, weight: this.weight}
     //const res = await collection(db, "profile").id("testDoc").set(temp2)

@@ -1,7 +1,3 @@
-import { LinearRegression, trainAndTestSets } from "linear-regression-ts"
-
-
-
 const conversionDictionary: { [key: string]: number } = {
                         "water": 1, "coconut_water": 1, "almond_milk": 1, "soy_milk": 1,
                         "coconut_milk": 1, "oat_milk": 1, "cashew_milk": 1, "hemp_milk": 1,

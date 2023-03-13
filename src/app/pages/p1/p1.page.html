@@ -8,31 +8,47 @@
 </ion-header>
 
 <ion-content class="ion-padding" fullscreen>
-  <ion-list lines="inset">
-    <ion-item>
-      <ion-label stacked>Current Position</ion-label>
-      <ion-input type="text" [value]="'(' + latitude + ', ' + longitude + ')'"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label stacked>Current Weather </ion-label>
-      <ion-input type="text" [value]="temp + '°F'"></ion-input>
-    </ion-item>
-
-  <ion-item class="temp">
-    <ion-label stacked>Steps in last 24 Hours</ion-label>
-    <ion-input type="text" [(ngModel)]="stepcount" readonly></ion-input>
+  <ion-item>
+    <ion-label stacked>Email:</ion-label>
+    <ion-input type="email" [(ngModel)]="email" placeholder="email@domain.com"></ion-input>
   </ion-item>
-    <ion-item>
-      <ion-label stacked>Height:</ion-label>
-      <ion-input type="text" [(ngModel)]="height" placeholder="input height here"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label stacked>Weight:</ion-label>
-      <ion-input type="text" [(ngModel)]="weight" placeholder="input weight here"></ion-input>
-    </ion-item>
+  <ion-item>
+    <ion-label stacked>Password:</ion-label>
+    <ion-input type="password" [(ngModel)]="password" placeholder="input password here"></ion-input>
+  </ion-item>
+  <br>
+  <ion-item>
+    <ion-label stacked>Current Position</ion-label>
+    <ion-input type="text" [value]="'(' + latitude + ', ' + longitude + ')'"></ion-input>
+  </ion-item>
 
-  </ion-list>
+  <ion-item>
+    <ion-label stacked>Current Weather </ion-label>
+    <ion-input type="text" [value]="temp + '°F'"></ion-input>
+  </ion-item>
+
+<ion-item class="temp">
+  <ion-label stacked>Steps in last 24 Hours</ion-label>
+  <ion-input type="text" [(ngModel)]="stepcount" readonly></ion-input>
+</ion-item>
+
+<ion-item>
+  <ion-label stacked>Gender:</ion-label>
+  <ion-input type="text" [(ngModel)]="gender" placeholder="input gender here"></ion-input>
+</ion-item>
+<ion-item>
+  <ion-label stacked>Age:</ion-label>
+  <ion-input type="text" [(ngModel)]="age" placeholder="input age here"></ion-input>
+</ion-item>
+  <ion-item>
+    <ion-label stacked>Height:</ion-label>
+    <ion-input type="text" [(ngModel)]="height" placeholder="input height here"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label stacked>Weight:</ion-label>
+    <ion-input type="text" [(ngModel)]="weight" placeholder="input weight here"></ion-input>
+  </ion-item>
+
 
   <br>
   <ion-button expand="block" (click)="buttonTest()">

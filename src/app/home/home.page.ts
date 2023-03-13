@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HealthKit, HealthKitOptions} from '@awesome-cordova-plugins/health-kit/ngx';
 import { Geolocation } from '@capacitor/geolocation';
 import { Platform } from '@ionic/angular';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 
 @Component({
@@ -14,6 +15,17 @@ import { Platform } from '@ionic/angular';
 export class HomePage {
 
   constructor( ) { }
+
+  // const auth = getAuth();
+  // createUserWithEmailAndPassword(auth, email, password)
+  //   .then((userCredential) => {
+  //     // Signed in 
+  //     const user = userCredential.user;
+  //   })
+  //   .catch((error) => {
+  //     const errorCode = error.code;
+  //     const errorMessage = error.message;
+  //   });
 
   ngOnInit() {
   }
