@@ -29,6 +29,7 @@ export class P1Page implements OnInit {
   weight?: number;
   temp = 0;
   stepcount = "No Data";
+  caloriesBurned = "No Data";
 
   item$: Observable<Item[]>;
 
@@ -70,11 +71,25 @@ export class P1Page implements OnInit {
       unit: 'count'
     }
 
+    var calorieOptions = {
+      startDate: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+      endDate: new Date(),
+      sampleType: 'HKQuantityTypeIdentifierActiveEnergyBurned',
+      unit: 'kcal'
+    }
+
     this.healthKit.querySampleType(stepOptions).then(data => {
       let stepSum = data.reduce((a: any, b: any) => a + b.quantity, 0);
       this.stepcount = stepSum;
     }, err => {
       console.log('No steps: ', err);
+    });
+
+    this.healthKit.querySampleType(calorieOptions).then(data => {
+      let calorieSum = data.reduce((a: any, b: any) => a + b.quantity, 0);
+    this.caloriesBurned = calorieSum;
+    }, err => {
+      console.log('No calories: ', err);
     });
 
   }
