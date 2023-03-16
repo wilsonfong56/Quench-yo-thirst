@@ -32,6 +32,21 @@
   <ion-input type="text" [(ngModel)]="stepcount" readonly></ion-input>
 </ion-item>
 
+<ion-item class="temp">
+	<ion-label stacked>Calories Burned in last 24 Hours</ion-label>
+	<ion-input type="text" [(ngModel)]="caloriesBurned" readonly></ion-input>
+</ion-item>
+
+<ion-item class="temp">
+	<ion-label stacked>Current Height: </ion-label>
+	<ion-input type="text" [value]="currentHeight + ' inches'" readonly></ion-input>
+</ion-item>
+<ion-item class="temp">
+	<ion-label stacked>Current Weight: </ion-label>
+	<ion-input type="text" [value]="currentWeight + ' lbs'" readonly></ion-input>
+</ion-item>
+
+
 <ion-item>
   <ion-label stacked>Gender:</ion-label>
   <ion-input type="text" [(ngModel)]="gender" placeholder="input gender here"></ion-input>

@@ -33,6 +33,8 @@ export class P1Page implements OnInit {
   temp = 0;
   stepcount = "No Data";
   caloriesBurned = "No Data";
+  currentHeight = "No Data";
+  currentWeight = "No Data";
 
   item$: Observable<Item[]>;
 
@@ -51,8 +53,8 @@ export class P1Page implements OnInit {
         if (available) {
         // Request all permissions up front if you like to
         var options: HealthKitOptions = {
-          readTypes: ['HKQuantityTypeIdentifierHeight', 'HKQuantityTypeIdentifierStepCount', 'HKWorkoutTypeIdentifier', 'HKQuantityTypeIdentifierActiveEnergyBurned', 'HKQuantityTypeIdentifierDistanceCycling'],
-          writeTypes: ['HKQuantityTypeIdentifierHeight', 'HKWorkoutTypeIdentifier', 'HKQuantityTypeIdentifierActiveEnergyBurned', 'HKQuantityTypeIdentifierDistanceCycling']
+          readTypes: ['HKQuantityTypeIdentifierHeight', 'HKQuantityTypeIdentifierBodyMass', 'HKQuantityTypeIdentifierStepCount', 'HKWorkoutTypeIdentifier', 'HKQuantityTypeIdentifierActiveEnergyBurned', 'HKQuantityTypeIdentifierDistanceCycling'],
+          writeTypes: []
         }
         this.healthKit.requestAuthorization(options).then(_ => {
           this.loadHealthData();
@@ -90,7 +92,21 @@ export class P1Page implements OnInit {
     
   }
 
+  
   async loadHealthData() {
+
+    this.healthKit.readHeight({ unit: 'in' }).then(val => {
+      this.currentHeight = Math.trunc(Number(val.value)).toString();
+      }, err => {
+        console.log('No height: ', err);
+      });
+
+    this.healthKit.readWeight({ unit: 'lb' }).then(val => {
+      this.currentWeight = val.value;
+      }, err => {
+        console.log('No weight: ', err);
+      });
+
     var stepOptions = {
       startDate: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
       endDate: new Date(),
@@ -104,6 +120,7 @@ export class P1Page implements OnInit {
       sampleType: 'HKQuantityTypeIdentifierActiveEnergyBurned',
       unit: 'kcal'
     }
+
 
     this.healthKit.querySampleType(stepOptions).then(data => {
       let stepSum = data.reduce((a: any, b: any) => a + b.quantity, 0);
