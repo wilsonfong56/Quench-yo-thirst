@@ -17,7 +17,7 @@ npx cap sync
 ```
 To install firebase extension
 ```
-npm insatll firebase
+npm install firebase
 ng add @angular/fire
 ```
 To install Firebase Admin SDK
@@ -27,7 +27,7 @@ export GOOGLE_APPLICATION_CREDENTIALS="service-account-file.json"
 ```
 [Firebase repo website](https://console.firebase.google.com/u/0/project/quench-yo-thirst-uci/overview)
 
-To install healthkid extension
+To install healthkit extension
 ```
 npm install cordova-plugin-health
 npm install @awesome-cordova-plugins/health
