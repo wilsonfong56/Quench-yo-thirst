@@ -5,7 +5,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { Platform } from '@ionic/angular';
 
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
-import { query, where, getDocs } from 'firebase/firestore';
+import { query, where, getDocs, doc, setDoc } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { getFirestore } from 'firebase/firestore';
 
@@ -13,6 +13,19 @@ interface Item {
   height: number,
   weight: number,
   name: string,
+};
+
+interface CombinedItem {
+  docName: string,
+  email: string,
+  height: number,
+  weight: number,
+  name: string,
+  heartRate: number,
+  stepCount: number,
+  calorieBurned: number,
+  tempreture: number,
+  water: number
 };
 
 
@@ -26,6 +39,7 @@ export class P1Page implements OnInit {
   password?: string;
   latitude = 0;
   longitude = 0;
+  city?: string;
   age?: number;
   gender?: string;
   height?: number;
@@ -64,11 +78,51 @@ export class P1Page implements OnInit {
     });
 
     // "admin@uci.edu"
+    let data: CombinedItem = {
+      docName: `${this.email} + ${this.caloriesBurned}`,
+      email: this.email || "test@gmail.com",
+      height: this.height || 6,
+      weight: this.weight || 180,
+      name: "admin",
+      heartRate: 100,
+      stepCount: 5000,
+      calorieBurned: 3000,
+      tempreture: 85,
+      water: 3000,
+    }
     this.queryData(firestore, "fake@gmail.com");
+    this.writeData(firestore, "profile", data);
+    this.writeData(firestore, "userData", data);
+    this.writeData(firestore, "regressorResult", data);
     const temp = collection(firestore, 'profile');
     this.item$ = collectionData(temp) as Observable<Item[]>
 
   }
+
+  // Add a new document in collection "cities"
+  async writeData(firestore: Firestore, tableName: string, data: CombinedItem) {
+    if (tableName == "profile") {
+      await setDoc(doc(firestore, tableName, data.docName), {
+        email: data.email,
+        name: data.name,
+        height: data.height,
+        weight: data.weight
+      });
+    } else if (tableName == "userData") {
+      await setDoc(doc(firestore, tableName, data.docName), {
+        email: data.email,
+        heartRate: data.heartRate,
+        stepCount: data.stepCount,
+        calorieBurned: data.calorieBurned,
+        temprature: data.tempreture,
+      });
+    } else if (tableName == "regressorResult") {
+      await setDoc(doc(firestore, tableName, data.docName), {
+        email: data.email,
+        water: data.water
+      });
+    }
+  };
 
   async queryData(firestore: Firestore, email: string) {
     const profileDatabase = collection(firestore, 'profile');
@@ -154,6 +208,7 @@ export class P1Page implements OnInit {
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${this.latitude}&lon=${this.longitude}&appid=${this.apiKey}&units=imperial`; 
     this.http.get(url).subscribe((data: any) => {
       this.temp = data.main.temp;
+      this.city = data.name;
     });
   }
 
