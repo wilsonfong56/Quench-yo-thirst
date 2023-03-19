@@ -20,6 +20,11 @@ To install firebase extension
 npm insatll firebase
 ng add @angular/fire
 ```
+To install Firebase Admin SDK
+```
+pip install --upgrade firebase-admin
+export GOOGLE_APPLICATION_CREDENTIALS="service-account-file.json"
+```
 [Firebase repo website](https://console.firebase.google.com/u/0/project/quench-yo-thirst-uci/overview)
 
 To install healthkid extension
@@ -37,4 +42,10 @@ Try the following before ng add command
 ```
 firebase login:ci     # log in to an account
 firebase login
+```
+Install numpy, pandas, sklearn
+```
+pip install numpy
+pip install pandas
+pip install scikit-learn
 ```
