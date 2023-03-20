@@ -23,7 +23,7 @@ ng add @angular/fire
 To install Firebase Admin SDK
 ```
 pip install --upgrade firebase-admin
-export GOOGLE_APPLICATION_CREDENTIALS="service-account-file.json"
+export GOOGLE_APPLICATION_CREDENTIALS="service_account_file.json"
 ```
 [Firebase repo website](https://console.firebase.google.com/u/0/project/quench-yo-thirst-uci/overview)
 
