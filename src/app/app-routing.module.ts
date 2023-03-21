@@ -23,6 +23,10 @@ const routes: Routes = [
     path: 'p3',
     loadChildren: () => import('./pages/p3/p3.module').then( m => m.P3PageModule)
   },
+  {
+    path: 'p4',
+    loadChildren: () => import('./pages/p4/p4.module').then( m => m.P4PageModule)
+  },
 ];
 
 @NgModule({

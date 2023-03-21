@@ -5,6 +5,7 @@ import { Injectable } from "@angular/core"
 })
 export class TestService {
     constructor() {}
-    public myData?: string;
+    public username = "";
+    public password = "";
 
 }

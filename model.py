@@ -44,17 +44,15 @@ ALTERNATIVES:
 
 
 class WaterUser:
-    def __init__(self, gender, age, weather, weight, height, waterWeightPercentage=0.62):
+    def __init__(self, gender, age, weather, weight, height, regressResult, waterUse, waterWeightPercentage=0.62):
         self.gender = gender
         self.age = age
         self.locationWeather = weather
         self.weight = weight
         self.height = height
         self.waterWeightPercentage = waterWeightPercentage
-
-        self.allergies = set()
-        self.recentExercise = []
-        self.recentWaterUse = []
+        self.regressResult = regressResult # in grams
+        self.recentWaterUse = waterUse
     
     # returns a list of top 5 reccomendations
     def getOptionReccomendations(self):
@@ -71,4 +69,19 @@ class WaterUser:
     def userDrank(self, option):
         pass
 
-
+    # recommended water based on gender, age, weight, height
+    def recWater(self):
+        waterGenAgeRec = 0
+        waterWeightRec = 28.35*self.weight/2
+        if self.age >= 4 and self.age <= 8:
+            recommended_water = 40
+        elif self.age >= 9 and self.age <= 13:
+            recommended_water = 60
+        elif self.age >= 14 and self.age <= 18:
+            recommended_water = 75
+        elif self.age >= 19 and self.gender == "male":
+            recommended_water = 104
+        elif self.age >= 19 and self.gender == "female":
+            recommended_water = 72
+        else:
+            recommended_water = 70

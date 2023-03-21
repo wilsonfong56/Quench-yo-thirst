@@ -3,9 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { HealthKit, HealthKitOptions} from '@awesome-cordova-plugins/health-kit/ngx';
 import { Geolocation } from '@capacitor/geolocation';
 import { Platform } from '@ionic/angular';
+import { TestService } from 'src/environments/services/test.service';
 
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
-import { query, where, getDocs } from 'firebase/firestore';
+import { query, where, getDocs, doc, setDoc  } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { getFirestore } from 'firebase/firestore';
 
@@ -15,6 +16,18 @@ interface Item {
   name: string,
 };
 
+interface CombinedItem {
+	docName: string,
+	email: string,
+	height: number,
+	weight: number,
+	name: string,
+	heartRate: number,
+	stepCount: number,
+	calorieBurned: number,
+	temperature: number,
+	water: number
+  };
 
 @Component({
   selector: 'app-p1',
@@ -22,31 +35,33 @@ interface Item {
   styleUrls: ['./p1.page.scss'],
 })
 export class P1Page implements OnInit {
-  email?: string;
-  password?: string;
   latitude = 0;
   longitude = 0;
-  age?: number;
-  gender?: string;
-  height?: number;
-  weight?: number;
+  height = 0;
+  weight = 0;
   temp = 0;
   stepcount = "No Data";
   caloriesBurned = "No Data";
   currentHeight = "No Data";
+  height_ft = "No Data";
+  height_in = "No Data";
   currentWeight = "No Data";
   heartRate = "No Data";
+  city = "No Data";
+  gender = "No Data";
+  age = "No Data";
+  firestore: Firestore;
 
   item$: Observable<Item[]>;
 
   constructor(
+	public _testService: TestService,
 	private http: HttpClient,
 	private healthKit: HealthKit,
 	@Inject('API_KEY') private apiKey: string,
 	  private plt: Platform,
 	firestore: Firestore)  { 
 
-	console.log("API KEY:", this.apiKey)
 	this.ngOnInit();
 
 	this.plt.ready().then(() => {
@@ -54,7 +69,7 @@ export class P1Page implements OnInit {
 		if (available) {
 		// Request all permissions up front if you like to
 		var options: HealthKitOptions = {
-		  readTypes: ['HKQuantityTypeIdentifierHeight', 'HKQuantityTypeIdentifierBodyMass', 'HKQuantityTypeIdentifierStepCount', 'HKWorkoutTypeIdentifier', 'HKQuantityTypeIdentifierActiveEnergyBurned', 'HKQuantityTypeIdentifierHeartRate'],
+		  readTypes: ['HKQuantityTypeIdentifierHeight', 'HKQuantityTypeIdentifierBodyMass', 'HKQuantityTypeIdentifierStepCount', 'HKWorkoutTypeIdentifier', 'HKQuantityTypeIdentifierActiveEnergyBurned', 'HKQuantityTypeIdentifierHeartRate', 'HKCharacteristicTypeIdentifierBiologicalSex'],
 		  writeTypes: []
 		}
 		this.healthKit.requestAuthorization(options).then(_ => {
@@ -63,17 +78,33 @@ export class P1Page implements OnInit {
 		}
 	  });
 	});
+	
+	this.queryData(firestore, "sampleUsername@gmail.com")
+	this.queryData(firestore, "butt")
+	this.writeData(firestore)
+	
 
 	// "admin@uci.edu"
-	this.queryData(firestore, "fake@gmail.com");
-	const temp = collection(firestore, 'profile');
-	this.item$ = collectionData(temp) as Observable<Item[]>
-
   }
 
+  // Add a new document in collection "cities"	
+  async writeData(firestore: Firestore) {
+	console.log("WRITING DATA")
+	await setDoc(doc(firestore, 'profile', 'drugs'), {	
+		username: this._testService.username,
+		password: this._testService.password,
+		height: this.height,	
+		weight: this.weight,
+		gender: this.gender,
+		age: this.age,
+		location: this.city,
+		weather: this.temp,
+	});	
+  };
+  
   async queryData(firestore: Firestore, email: string) {
 	const profileDatabase = collection(firestore, 'profile');
-	const q = query(profileDatabase, where("email", "==", email));
+	const q = query(profileDatabase, where("username", "==", email));
 	const queryTester = await getDocs(q);
 	if (queryTester.size == 0) {
 	  // users need to input their biometric data
@@ -97,6 +128,8 @@ export class P1Page implements OnInit {
   async loadHealthData() {
 
 	this.healthKit.readHeight({ unit: 'in' }).then(val => {
+	  this.height_ft = Math.floor(Math.trunc(Number(val.value)) / 12).toString();
+	  this.height_in = (Math.trunc(Number(val.value)) % 12).toString()
 	  this.currentHeight = Math.trunc(Number(val.value)).toString();
 	  }, err => {
 		console.log('No height: ', err);
@@ -107,6 +140,34 @@ export class P1Page implements OnInit {
 	  }, err => {
 		console.log('No weight: ', err);
 	  });
+
+	this.healthKit.readGender().then(val => {
+	  this.gender = val;
+	}, err => {
+		console.log('No weight: ', err);
+	});
+
+
+	this.healthKit.readDateOfBirth().then(val => {
+	  this.age = val.split("T")[0];
+	  const birthdate = new Date(this.age);
+
+	  // Get the current date
+	  const now = new Date();
+
+	// Calculate the difference in milliseconds between the birthdate and now
+	  const diffMs = now.valueOf() - birthdate.valueOf();
+
+	// Convert the difference to years
+	  this.age = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365.25)).toString();
+
+	  console.log("Age: " + this.age);
+	//   this.age = this.diff_years(new Date(new Date().getTime() - 24 * 60 * 60 * 1000), new Date(val.split("T")[0])).toString();
+	//   this.age = new Date(new Date() - new Date(val.split("T")[0])).getFullYear() - 1970;
+	}, err => {
+		console.log('No age: ', err);
+	});
+
 
 	var heartOptions = {
 		startDate: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
@@ -155,6 +216,8 @@ export class P1Page implements OnInit {
   async ngOnInit() {
 	await this.getCurrentPosition();
 	this.getWeather();
+	this.queryData(this.firestore, "sampleUsername@gmail.com")
+	this.writeData(this.firestore)
   }
 
   async getCurrentPosition() {
@@ -168,9 +231,10 @@ export class P1Page implements OnInit {
 	const url = `https://api.openweathermap.org/data/2.5/weather?lat=${this.latitude}&lon=${this.longitude}&appid=${this.apiKey}&units=imperial`; 
 	this.http.get(url).subscribe((data: any) => {
 	  this.temp = data.main.temp;
+	  this.city = data.name;
 	});
-	console.log(url)
   }
+  
   async buttonTest() {
 	console.log("HEIGHT:", this.height)
 	console.log("WEIGHT:", this.weight)
