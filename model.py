@@ -71,7 +71,7 @@ class WaterUser:
 
     # recommended water based on gender, age, weight, height
     def recWater(self):
-        waterGenAgeRec = 0
+        recommended_water = 0
         waterWeightRec = 28.35*self.weight/2
         if self.age >= 4 and self.age <= 8:
             recommended_water = 40
@@ -85,3 +85,5 @@ class WaterUser:
             recommended_water = 72
         else:
             recommended_water = 70
+        recommended_water = (recommended_water+waterWeightRec)/2
+        return recommended_water

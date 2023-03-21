@@ -11,6 +11,8 @@ import { Observable } from 'rxjs';
 import { getFirestore } from 'firebase/firestore';
 
 
+
+
 interface RegResult {
   docName: string,
   email: string,
@@ -33,7 +35,7 @@ export class P2Page implements OnInit {
   heartRate = "No Data";
   caloriesBurned = "No Data";
 
-  item$: Observable<Item[]>;
+//   item$: Observable<Item[]>;
   regressorResult: number;
   constructor(public _testService: TestService,
     private http: HttpClient,
@@ -43,7 +45,7 @@ export class P2Page implements OnInit {
     firestore: Firestore) { 
       this.queryData(firestore, "sampleUsername@gmail.com");
       const temp = collection(firestore, 'profile');
-      this.item$ = collectionData(temp) as Observable<Item[]>
+	//   this.item$ = collectionData(temp) as Observable<Item[]>
 
       this.ngOnInit();
 
