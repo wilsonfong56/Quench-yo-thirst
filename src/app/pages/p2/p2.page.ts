@@ -6,15 +6,17 @@ import { Platform } from '@ionic/angular';
 import { TestService } from 'src/environments/services/test.service';
 
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
-import { query, where, getDocs } from 'firebase/firestore';
+import { query, where, getDocs, doc, setDoc } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { getFirestore } from 'firebase/firestore';
 
-interface Item {
-  height: number,
-  weight: number,
-  name: string,
+
+interface RegResult {
+  docName: string,
+  email: string,
+  water: number
 };
+
 
 @Component({
   selector: 'app-p2',
