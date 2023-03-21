@@ -49,3 +49,7 @@ pip install numpy
 pip install pandas
 pip install scikit-learn
 ```
+Install chart
+```
+npm install chart.js
+```
