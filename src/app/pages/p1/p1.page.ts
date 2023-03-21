@@ -50,6 +50,9 @@ export class P1Page implements OnInit {
   city = "No Data";
   gender = "No Data";
   age = 0;
+
+  tArray = [0, 0, 0, 0, 0, 0, 0];
+
   firestore: Firestore;
 
   item$: Observable<Item[]>;
@@ -94,8 +97,9 @@ export class P1Page implements OnInit {
 		weight: this.weight,
 		gender: this.gender,
 		age: this.age,
-		location: this.city,
-		weather: this.temp,
+		location: this._testService.city,
+		weather: this._testService.weather,
+		lastSevenDays: [4,4,5,1,5,3,2]
 	});	
   };
   
@@ -106,8 +110,6 @@ export class P1Page implements OnInit {
 	if (queryTester.size == 0) {
 		// users need to input their biometric data
 		console.log("USER CREATED")
-		await this.getCurrentPosition();
-		this.getWeather()
 		this.writeData(firestore, email);
 	  } else if (queryTester.size == 1) {
 		// users have created the accounts, and we need to load their previous data
@@ -116,6 +118,7 @@ export class P1Page implements OnInit {
 	console.log(queryTester.size);
 	queryTester.forEach((doc) => {
 	  console.log(doc.id, " => ", doc.data());
+	  this._testService.temp = doc.data()["lastSevenDays"];
 	})
   }
 

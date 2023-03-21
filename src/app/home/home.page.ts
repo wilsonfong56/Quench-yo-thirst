@@ -6,6 +6,11 @@ import { Platform } from '@ionic/angular';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { TestService } from 'src/environments/services/test.service';
 
+import { Firestore, collectionData, collection } from '@angular/fire/firestore';
+import { query, where, getDocs, doc, setDoc  } from 'firebase/firestore';
+import { Observable } from 'rxjs';
+import { getFirestore } from 'firebase/firestore';
+
 
 @Component({
   selector: 'app-home',
@@ -16,8 +21,14 @@ import { TestService } from 'src/environments/services/test.service';
 export class HomePage implements OnInit {
   email?: string;
   password?: string;
+  latitude = 0;
+  longitude = 0;
 
-  constructor(public _testService: TestService) { }
+  constructor(public _testService: TestService, private http: HttpClient,
+    @Inject('API_KEY') private apiKey: string) {
+
+    this.ngOnInit()
+   }
 
   // const auth = getAuth();
   // createUserWithEmailAndPassword(auth, email, password)
@@ -30,8 +41,25 @@ export class HomePage implements OnInit {
   //     const errorMessage = error.message;
   //   });
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.getCurrentPosition();
+	  this.getWeather();
   }
+
+  async getCurrentPosition() {
+    const position = await Geolocation.getCurrentPosition();
+    this.latitude = position.coords.latitude;
+    this.longitude = position.coords.longitude;
+    }
+  
+    async getWeather() {
+    // Change this later so api key is hidden
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${this.latitude}&lon=${this.longitude}&appid=${this.apiKey}&units=imperial`; 
+    this.http.get(url).subscribe((data: any) => {
+      this._testService.weather = data.main.temp;
+      this._testService.city = data.name;
+    });
+    }
 
 
 

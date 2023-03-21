@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Chart, registerables} from 'chart.js';
+import { TestService } from 'src/environments/services/test.service';
 
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
 import { query, where, getDocs } from 'firebase/firestore';
@@ -24,7 +25,7 @@ export class P3Page implements AfterViewInit {
   lastSeven: any;
 
 
-  constructor(firestore: Firestore) { 
+  constructor(firestore: Firestore, public _testService: TestService) { 
     this.queryData(firestore, "sampleUsername@gmail.com");
   }
 
@@ -108,7 +109,7 @@ export class P3Page implements AfterViewInit {
             pointHoverBorderWidth: 2,
             pointRadius: 1,
             pointHitRadius: 10,
-            data: [],
+            data: this._testService.temp,
             spanGaps: false,
           }
         ]
