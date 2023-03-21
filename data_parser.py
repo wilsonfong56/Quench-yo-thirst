@@ -27,16 +27,16 @@ if __name__ == "__main__":
     cred = credentials.ApplicationDefault()
     firebase_admin.initialize_app(cred)
     firestore_client = firestore.client()
-    data_list = list()
-    for data in firestore_client.collection("userData"):
-        print(data)
-    doc_ref = firestore_client.collection("userData").document("test")
-    doc_ref = firestore_client.collection("regressorResult").document("test")
+    #data_list = list()
+    # for data in firestore_client.collection("profile"):
+    #     print(data)
+    doc_ref = firestore_client.collection("profile").document("final4")
+    #doc_ref = firestore_client.collection("regressorResult").document("test")
     doc = doc_ref.get()
-    if doc.exists:
-        doc_info = doc.to_dict()
+    # if doc.exists:
+    #     doc_info = doc.to_dict()
 
-    doc_ref.set(
+    doc_ref.update(
         {
             "regressorResult": pre_result[0]
         }

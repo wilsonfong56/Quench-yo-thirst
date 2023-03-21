@@ -1,9 +1,5 @@
 # from codecs import getencoder
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
-import sys 
-from model import WaterUser
+import model
 # Use the application default credentials.
 
 if __name__ == "__main__":
@@ -15,17 +11,7 @@ if __name__ == "__main__":
     # height = int(sys.argv[6])
 
     # # Use the application default credentials.
-    cred = credentials.ApplicationDefault()
-    firebase_admin.initialize_app(cred)
-    firestore_client = firestore.client()
 
-
-    doc_ref = firestore_client.collection("profile").document("sample")
-    doc_ref.update(
-        {
-            "lastSevenDays": [69,420,96,85,21]
-        }
-    )
     # doc_ref.set(
     #     {
     #         "username": email,
@@ -36,20 +22,16 @@ if __name__ == "__main__":
     #        "height": height
 
     #     }
-    # )
-
-    # doc = doc_ref.get()
-    # print(doc)
-    # if doc.exists:
-    #     profile = doc.to_dict()
-    #     print(f'Document data: {doc.to_dict()}')
-    
-    # profile = WaterUser(profile["gender"], profile["age"], profile["weather"], profile["weight"],
-    #                     profile["height"], profile["regressorResult"], profile["waterUse"])
-
+    # )x
 
     # doc_ref.update(
     #     {
     #         "recommendedWater": 120
     #     }
     # )
+
+    profile = model.WaterUser("final4")
+    profile.updateDaily()
+    while(True):
+        print(profile.getOptionRecommendations())
+        profile.userSuggestedLess(input())

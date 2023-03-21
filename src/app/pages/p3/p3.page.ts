@@ -79,8 +79,8 @@ export class P3Page implements AfterViewInit {
   }
 
   test() {
-    console.log("BRUHv", this.lineChart["data"]["datasets"][0]["data"])
-    this.lineChart["data"]["datasets"][0]["data"] = this.lastSeven
+    console.log("BRUHv", this.lineChart["data"]["datasets"][1]["data"]);
+    this.lineChart["data"]["datasets"][1]["data"] = this.lastSeven;
     this.lineChart.update();
   }
 
@@ -111,7 +111,29 @@ export class P3Page implements AfterViewInit {
             pointHitRadius: 10,
             data: this._testService.temp,
             spanGaps: false,
+          },
+		  {
+            label: 'Water Drank',
+            fill: false,
+            backgroundColor: 'rgba(245, 90, 66,0.4)',
+            borderColor: 'rgba(245, 90, 66,1)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(245, 90, 66,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(245, 90, 66,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: this._testService.temp2,
+            spanGaps: false,
           }
+
         ]
       },
 		options: {

@@ -6,7 +6,7 @@ import { Platform } from '@ionic/angular';
 import { TestService } from 'src/environments/services/test.service';
 
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
-import { query, where, getDocs, doc, setDoc  } from 'firebase/firestore';
+import { query, where, getDocs, doc, setDoc, updateDoc  } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 import { getFirestore } from 'firebase/firestore';
 
@@ -18,10 +18,10 @@ interface Item {
 
 interface CombinedItem {
 	docName: string,
-	email: string,
+	username: string,
+	password: string,
 	height: number,
 	weight: number,
-	name: string,
 	heartRate: number,
 	stepCount: number,
 	calorieBurned: number,
@@ -53,8 +53,6 @@ export class P1Page implements OnInit {
 
   tArray = [0, 0, 0, 0, 0, 0, 0];
 
-  firestore: Firestore;
-
   item$: Observable<Item[]>;
 
   constructor(
@@ -81,10 +79,22 @@ export class P1Page implements OnInit {
 		}
 	  });
 	});
+
 	this.queryData(firestore, this._testService.username)
 	
 
 	// "admin@uci.edu"
+  }
+
+  async updateProfile() {
+	const input_weight = document.getElementById('html_weight') as HTMLInputElement | null;
+	const value_weight = input_weight?.value;
+
+	const f = getFirestore();
+
+	await updateDoc(doc(f, 'profile', this._testService.username), {	
+		weight: Number(value_weight),
+	});
   }
 
   // Add a new document in collection "cities"	
@@ -97,12 +107,14 @@ export class P1Page implements OnInit {
 		weight: this.weight,
 		gender: this.gender,
 		age: this.age,
-		location: this._testService.city,
-		weather: this._testService.weather,
-		lastSevenDays: [4,4,5,1,5,3,2]
-	});	
+		// location: this._testService.city,
+		weather: this.temp,
+		lastSevenDays: [0,0,0,0,0,0,0],
+		recLastSevenDays: [0,0,0,0,0,0,0]
+		// drinksList: {}
+	});
   };
-  
+
   async queryData(firestore: Firestore, email: string) {
 	const profileDatabase = collection(firestore, 'profile');
 	const q = query(profileDatabase, where("username", "==", email));
@@ -114,11 +126,20 @@ export class P1Page implements OnInit {
 	  } else if (queryTester.size == 1) {
 		// users have created the accounts, and we need to load their previous data
 		console.log("USER EXISTS")
+		queryTester.forEach((doc) => {
+			this._testService.temp = doc.data()["lastSevenDays"];
+			this._testService.temp2 = doc.data()["recLastSevenDays"];
+			this.height = doc.data()["height"];
+			this.weight = doc.data()["weight"];
+			this.gender = doc.data()["gender"];
+			this.age = doc.data()["age"];
+		  })
 	  }
 	console.log(queryTester.size);
 	queryTester.forEach((doc) => {
 	  console.log(doc.id, " => ", doc.data());
 	  this._testService.temp = doc.data()["lastSevenDays"];
+	  this._testService.temp2 = doc.data()["recLastSevenDays"];
 	})
   }
 
@@ -244,4 +265,6 @@ export class P1Page implements OnInit {
 	//const temp2 = {name: "joe", height: this.height, weight: this.weight}
 	//const res = await collection(db, "profile").id("testDoc").set(temp2)
   }
+
+
 }

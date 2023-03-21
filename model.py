@@ -1,9 +1,11 @@
-
 # of all milks and juices convert to 1
-conversionDictionary = {"water": 1, "coconut_water": 1, "almond_milk": 1, "soy_milk": 1,
-                        "coconut_milk": 1, "oat_milk": 1, "cashew_milk": 1, "hemp_milk": 1,
-                        "rice_milk": 1, "watermelon": 2, "cucumber": 2, "ALL!!!!!juice": 1,
-                        "tea": 1}
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+import sys, math
+
+
+from datetime import date
 
 '''
 ALTERNATIVES:
@@ -42,37 +44,71 @@ ALTERNATIVES:
         
 '''
 
-
 class WaterUser:
-    def __init__(self, gender, age, weather, weight, height, regressResult, waterUse, waterWeightPercentage=0.62):
-        self.gender = gender
-        self.age = age
-        self.locationWeather = weather
-        self.weight = weight
-        self.height = height
-        self.waterWeightPercentage = waterWeightPercentage
-        self.regressResult = regressResult # in grams
-        self.recentWaterUse = waterUse
-    
-    # returns a list of top 5 reccomendations
-    def getOptionReccomendations(self):
-        pass
+    def __init__(self, docName):
+        cred = credentials.ApplicationDefault()
+        firebase_admin.initialize_app(cred)
+        firestore_client = firestore.client()
+
+        self.drinksCollec = firestore_client.collection("options")
+        self.drinkConver = {"water": 1}
+        self.drinkConver.update({item.id:self.drinksCollec.document(item.id).get().to_dict()["conversionRate"] for item in self.drinksCollec.get()})
+        self.doc_ref = firestore_client.collection("profile").document(docName)
+        self.doc_dict = self.doc_ref.get().to_dict()
+
+        self.gender = self.doc_dict["gender"]
+        self.age = self.doc_dict["age"]
+        self.locationWeather = self.doc_dict["weather"]
+        self.weight = self.doc_dict["weight"]
+        self.height = self.doc_dict["height"]
+        #self.waterWeightPercentage = self.doc_dict["waterWeight"]
+        self.regressResult = self.doc_dict["regressorResult"]/28.35 # g -> oz
+        self.recentWaterUse = self.doc_dict["lastSevenDays"]
+        self.recentWaterRec = self.doc_dict["recLastSevenDays"]
+        try:
+            self.drinkWeights = self.doc_dict["drinkWeights"]
+        except:
+            self.drinkWeights = {"water": 1}
+            self.drinkWeights.update({item.id:0.99 for item in firestore_client.collection('options').get()})
+            self.doc_ref.set({"drinkWeights": self.drinkWeights}, merge=True)
+        try: 
+            self.lastUpdate = self.doc_dict["lastUpdate"]
+        except:
+            today = date.today()
+            d1 = today.strftime("%d/%m/%Y")
+            self.lastUpdate = d1
+            self.doc_ref.set({"lastUpdate": self.lastUpdate}, merge=True)
+
+        self.waterRec = self.recWater() # get daily water recommendation
+        self.getOptionRecommendations()
+
+    def printProfile(self):
+        print(f'Document data: {self.doc_dict}')
+
+    # returns a list of top 5 recommendations
+    def getOptionRecommendations(self):
+        n = 5
+        drinks = sorted(self.drinkWeights.items(), key=lambda item: item[1], reverse=True)[:n]
+        drinks = [item[0] for item in drinks]
+        drinkRecs = {}
+        for drink in drinks:
+            drinkRecs.update({drink: math.ceil(16.9/(0.035274*self.drinkConver[drink]))})
+
+        self.doc_ref.update({"drinkRecs": drinkRecs})
+
+        return drinkRecs
 
     # user clicked to show option less
     # adjust the weights of option showing up
     def userSuggestedLess(self, option):
+        if(option != "water"):
+            self.drinkWeights[option] = 0.8*self.drinkWeights[option]
+            self.doc_ref.update({"drinkWeights": self.drinkWeights})
 
-        pass
-
-    # user clicked saying they drank this
-    # adjust accordingly
-    def userDrank(self, option):
-        pass
-
-    # recommended water based on gender, age, weight, height
+    # recommended water based on gender, age, weight, height, temp
     def recWater(self):
         recommended_water = 0
-        waterWeightRec = 28.35*self.weight/2
+        waterWeightRec = self.weight/2
         if self.age >= 4 and self.age <= 8:
             recommended_water = 40
         elif self.age >= 9 and self.age <= 13:
@@ -85,5 +121,36 @@ class WaterUser:
             recommended_water = 72
         else:
             recommended_water = 70
-        recommended_water = (recommended_water+waterWeightRec)/2
-        return recommended_water
+        recommended_water = 0.6*((recommended_water+waterWeightRec)/2)+(0.4*self.regressResult)
+        if self.locationWeather >= 100:
+            recommended_water = 1.1*recommended_water
+        if self.locationWeather >= 90:
+            recommended_water = 1.08*recommended_water
+        if self.locationWeather >= 80:
+            recommended_water = 1.07*recommended_water
+        if self.locationWeather >= 75:
+            recommended_water = 1.05*recommended_water
+        if self.locationWeather >= 70:
+            recommended_water = 1.02*recommended_water
+        daysMissed = 0
+        for i in range(-1, -4, -1):
+            if(self.recentWaterUse[i] < self.recentWaterRec[i]):
+                daysMissed += 1
+        if daysMissed = 3:
+            recommended_water *= 0.98
+        self.doc_ref.set({"recommendedWater": math.ceil(recommended_water)}, merge=True)
+        return math.ceil(recommended_water)
+
+    def updateDaily(self):
+        today = date.today()
+        d1 = today.strftime("%d/%m/%Y")
+        print("d1:", d1)
+        if d1 != self.lastUpdate:
+            print("HUH")
+            self.recentWaterUse.pop(0)
+            self.recentWaterUse.append(0)
+            self.recentWaterRec.pop(0)
+            self.recentWaterRec.append(self.recWater())
+            self.doc_ref.update({"recLastSevenDays": self.recentWaterRec})
+            self.doc_ref.update({"lastSevenDays": self.recentWaterUse})
+            self.doc_ref.update({"lastUpdate": d1})

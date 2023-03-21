@@ -8,6 +8,7 @@ export class TestService {
     public username = "";
     public password = "";
     public temp = [0, 0, 0, 0, 0, 0, 0];
+    public temp2 = [0, 0, 0, 0, 0, 0, 0];
     public city = "";
     public weather = "";
 }

@@ -6,18 +6,12 @@ import { Platform } from '@ionic/angular';
 import { TestService } from 'src/environments/services/test.service';
 
 import { Firestore, collectionData, collection } from '@angular/fire/firestore';
-import { query, where, getDocs, doc, setDoc } from 'firebase/firestore';
-import { Observable } from 'rxjs';
+import { query, where, getDocs, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { Observable, of } from 'rxjs';
 import { getFirestore } from 'firebase/firestore';
 
+import { Item } from './p2.item';
 
-
-
-interface RegResult {
-  docName: string,
-  email: string,
-  water: number
-};
 
 
 @Component({
@@ -26,61 +20,39 @@ interface RegResult {
   styleUrls: ['./p2.page.scss'],
 })
 
-export class P2Page implements OnInit {
-  latitude = 0;
-  longitude = 0;
-  city = "No Data";
-  temp = 0;
-  stepcount = "No Data";
-  heartRate = "No Data";
-  caloriesBurned = "No Data";
 
-//   item$: Observable<Item[]>;
-  regressorResult: number;
+export class P2Page implements OnInit {
+
+  todaysRec: number;
+
+  bruh: Item[] = [];
+  bruh2: any;
+  intake: any;
+
+  heroes = [
+    new Item('Widstorm', 23),
+    new Item('Bombasto', 53)
+
+  ];
+
   constructor(public _testService: TestService,
     private http: HttpClient,
     private healthKit: HealthKit,
     @Inject('API_KEY') private apiKey: string,
       private plt: Platform,
     firestore: Firestore) { 
-      this.queryData(firestore, "sampleUsername@gmail.com");
-      const temp = collection(firestore, 'profile');
-	//   this.item$ = collectionData(temp) as Observable<Item[]>
+
+      this.queryData(firestore, this._testService.username);
+
+      // const temp = collection(firestore, 'profile');
+	    // this.item$ = collectionData(temp) as Observable<Item[]>;
+
+      //console.log(this.user$)
 
       this.ngOnInit();
 
-      this.plt.ready().then(() => {
-        this.healthKit.available().then(available => {
-        if (available) {
-        // Request all permissions up front if you like to
-        var options: HealthKitOptions = {
-          readTypes: ['HKQuantityTypeIdentifierHeight', 'HKQuantityTypeIdentifierBodyMass', 'HKQuantityTypeIdentifierStepCount', 'HKWorkoutTypeIdentifier', 'HKQuantityTypeIdentifierActiveEnergyBurned', 'HKQuantityTypeIdentifierHeartRate', 'HKCharacteristicTypeIdentifierBiologicalSex'],
-          writeTypes: []
-        }
-        this.healthKit.requestAuthorization(options).then(_ => {
-          this.loadHealthData();
-        })
-        }
-        });
-      });
-
   }
 
-
-  async getCurrentPosition() {
-    const position = await Geolocation.getCurrentPosition();
-    this.latitude = position.coords.latitude;
-    this.longitude = position.coords.longitude;
-    }
-  
-    async getWeather() {
-    // Change this later so api key is hidden
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${this.latitude}&lon=${this.longitude}&appid=${this.apiKey}&units=imperial`; 
-    this.http.get(url).subscribe((data: any) => {
-      this.temp = data.main.temp;
-      this.city = data.name;
-    });
-    }
 
   async queryData(firestore: Firestore, email: string) {
     const profileDatabase = collection(firestore, 'profile');
@@ -91,66 +63,70 @@ export class P2Page implements OnInit {
 
     } else if (queryTester.size == 1) {
       // users have created the accounts, and we need to load their previous data
-
+      queryTester.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        this.todaysRec = doc.data()["recommendedWater"]
+      })
     }
     console.log(queryTester.size);
     queryTester.forEach((doc) => {
       console.log(doc.id, " => ", doc.data());
-      this.regressorResult = doc.data()["regressorResult"];
+      for (let key in doc.data()["drinkRecs"]) {
+        let val = doc.data()["drinkRecs"][key];
+        this.bruh.push(new Item(key, val));
+      }
+      this.bruh2 = of(this.bruh);
     })
   }
 
 
-  async loadHealthData() {  
-  
-    var heartOptions = {
-      startDate: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-      endDate: new Date(),
-      sampleType: 'HKQuantityTypeIdentifierHeartRate',
-      unit: 'count/min'
-    }
-  
-    var stepOptions = {
-      startDate: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-      endDate: new Date(),
-      sampleType: 'HKQuantityTypeIdentifierStepCount',
-      unit: 'count'
-    }
-  
-    var calorieOptions = {
-      startDate: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-      endDate: new Date(),
-      sampleType: 'HKQuantityTypeIdentifierActiveEnergyBurned',
-      unit: 'kcal'
-    }
-  
-    this.healthKit.querySampleType(heartOptions).then(data => {
-      let heartRate = data.reduce((a: any, b: any) => a + b.quantity, 0);
-      this.heartRate = (heartRate / data.length).toString();
-    }, err => {
-      console.log('No heartrate: ', err);
-    });
-  
-    this.healthKit.querySampleType(stepOptions).then(data => {
-      let stepSum = data.reduce((a: any, b: any) => a + b.quantity, 0);
-      this.stepcount = stepSum;
-    }, err => {
-      console.log('No steps: ', err);
-    });
-  
-    this.healthKit.querySampleType(calorieOptions).then(data => {
-      let calorieSum = data.reduce((a: any, b: any) => a + b.quantity, 0);
-      this.caloriesBurned = calorieSum;
-    }, err => {
-      console.log('No calories: ', err);
-    });
-  
-    }
-
   async ngOnInit() {
-    await this.getCurrentPosition();
-    this.getWeather();
   }
+
+  async testButt(key: string) {
+
+    console.log("key", key)
+    console.log(this.bruh)
+    for (var val of this.bruh) {
+      if (val["item"] == key) {
+        console.log(val);
+        this.todaysRec -= 16.9;
+		this.todaysRec = Math.round(this.todaysRec * 10) / 10;
+		this.todaysRec = Number(this.todaysRec.toFixed(1));
+        
+        this.updateAmountDrank(16.9);
+      }
+    }
+    // this.todaysRec -= this.bruh[key]
+  }
+
+  subtractDrunkWater(){
+	  this.todaysRec -= this.intake;
+    this.updateAmountDrank(this.intake);
+  }
+
+  async updateAmountDrank(val: number) {
+
+    const f = getFirestore();
+
+    const profileDatabase = collection(f, 'profile');
+    const q = query(profileDatabase, where("username", "==", this._testService.username));
+    const queryTester = await getDocs(q);
+    queryTester.forEach((doc) => {
+        this._testService.temp = doc.data()["lastSevenDays"];
+        this._testService.temp[this._testService.temp.length - 1] += Number(val);
+      })
+
+    await updateDoc(doc(f, 'profile', this._testService.username), {	
+        lastSevenDays: this._testService.temp,
+        recommendedWater: this.todaysRec
+      });
+
+    }
+  
+
+
+ 
 
 
 }

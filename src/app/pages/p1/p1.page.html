@@ -20,7 +20,7 @@
   </ion-item>
   <ion-item class="temp">
     <ion-label stacked>Weight: </ion-label>
-    <ion-input type="text" [value]="currentWeight + ' lbs'" readonly></ion-input>
+    <ion-input id='html_weight' type="text" [value]="weight + ' lbs'"></ion-input>
   </ion-item>
   <ion-item>
     <ion-label stacked>Gender:</ion-label>
@@ -36,7 +36,7 @@
   </ion-item>
 
   <br>
-  <p>TAKE THIS STUFF OUT:</p>
+  <p>OTHER:</p>
   <ion-item>
     <ion-label stacked>Weather </ion-label>
     <ion-input type="text" [value]="temp + '°F'"></ion-input>
@@ -56,6 +56,9 @@
     <ion-input type="text" [(ngModel)]="heartRate" readonly></ion-input>
   </ion-item>
 
+  <ion-button expand="block" (click)="updateProfile()">
+    update profile
+  </ion-button>
 
 
   <ul>

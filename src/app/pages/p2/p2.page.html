@@ -8,28 +8,43 @@
 </ion-header>
 
 <ion-content class="ion-padding" fullscreen>
-<p> USERNAME = {{_testService.username}} </p>
-<p> PASSWORD = {{_testService.password}} </p>
+  <h1>
+    <ion-input type="text" [value]="todaysRec + ' oz'" readonly></ion-input>
+  </h1>
+  <ul>
+    <h4>OPTIONS:</h4>
+    <li *ngFor="let test of bruh2 | async">
+      <ion-button expand="block" (click)="testButt(test.item)">
+        {{ test.value }}g {{ test.item }} <br>
+      </ion-button>
+      <br>
+  </ul>
+  <h4>INPUT YOUR OWN INFORMATION:</h4>
+  <ion-item class="temp">
+    <ion-label stacked>Water Intake: </ion-label>
+	
+    <ion-input type="text" [(ngModel)]="intake" placeholder="input intake in oz"></ion-input>
+	<ion-button slot="end" (click)="subtractDrunkWater()">
+		enter
+	</ion-button>
+  </ion-item>
+  <br>
+  <ion-list>
+    <ion-item>
+      <!-- <ion-select interface="popover" placeholder="Suggest Less">
+        <li *ngFor="let test of bruh2 | async">
+          <ion-select-option value=test.item>{{ test.item }}</ion-select-option>
+      </ion-select> -->
 
+      <ion-select interface="popover" placeholder="Suggest Less">
+        <ion-select-option *ngFor="let test of bruh2 | async"> {{test.item}} </ion-select-option>
+      </ion-select>
 
-<ion-item>
-  <ion-label stacked>Weather </ion-label>
-  <ion-input type="text" [value]="temp + '°F'"></ion-input>
-</ion-item>
-
-<ion-item class="temp">
-  <ion-label stacked>24hrs Steps</ion-label>
-  <ion-input type="text" [(ngModel)]="stepcount" readonly></ion-input>
-</ion-item>
-
-<ion-item class="temp">
-  <ion-label stacked>24hrs Calories</ion-label>
-  <ion-input type="text" [(ngModel)]="caloriesBurned" readonly></ion-input>
-</ion-item>
-<ion-item class="temp">
-  <ion-label stacked>Avg Heart Rate:</ion-label>
-  <ion-input type="text" [(ngModel)]="heartRate" readonly></ion-input>
-</ion-item>
+      <ion-button slot="end">
+        enter
+      </ion-button>
+    </ion-item>
+  </ion-list>
 
 </ion-content>
 
