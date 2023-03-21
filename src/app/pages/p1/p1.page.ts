@@ -39,7 +39,7 @@ export class P1Page implements OnInit {
   longitude = 0;
   height = 0;
   weight = 0;
-  temp = 0;
+  temp = "";
   stepcount = "No Data";
   caloriesBurned = "No Data";
   currentHeight = "No Data";
@@ -49,7 +49,7 @@ export class P1Page implements OnInit {
   heartRate = "No Data";
   city = "No Data";
   gender = "No Data";
-  age = "No Data";
+  age = 0;
   firestore: Firestore;
 
   item$: Observable<Item[]>;
@@ -78,19 +78,16 @@ export class P1Page implements OnInit {
 		}
 	  });
 	});
-	
-	this.queryData(firestore, "sampleUsername@gmail.com")
-	this.queryData(firestore, "butt")
-	this.writeData(firestore)
+	this.queryData(firestore, this._testService.username)
 	
 
 	// "admin@uci.edu"
   }
 
   // Add a new document in collection "cities"	
-  async writeData(firestore: Firestore) {
+  async writeData(firestore: Firestore, email: string) {
 	console.log("WRITING DATA")
-	await setDoc(doc(firestore, 'profile', 'drugs'), {	
+	await setDoc(doc(firestore, 'profile', email), {	
 		username: this._testService.username,
 		password: this._testService.password,
 		height: this.height,	
@@ -107,12 +104,15 @@ export class P1Page implements OnInit {
 	const q = query(profileDatabase, where("username", "==", email));
 	const queryTester = await getDocs(q);
 	if (queryTester.size == 0) {
-	  // users need to input their biometric data
-
-	} else if (queryTester.size == 1) {
-	  // users have created the accounts, and we need to load their previous data
-
-	}
+		// users need to input their biometric data
+		console.log("USER CREATED")
+		await this.getCurrentPosition();
+		this.getWeather()
+		this.writeData(firestore, email);
+	  } else if (queryTester.size == 1) {
+		// users have created the accounts, and we need to load their previous data
+		console.log("USER EXISTS")
+	  }
 	console.log(queryTester.size);
 	queryTester.forEach((doc) => {
 	  console.log(doc.id, " => ", doc.data());
@@ -131,12 +131,14 @@ export class P1Page implements OnInit {
 	  this.height_ft = Math.floor(Math.trunc(Number(val.value)) / 12).toString();
 	  this.height_in = (Math.trunc(Number(val.value)) % 12).toString()
 	  this.currentHeight = Math.trunc(Number(val.value)).toString();
+	  this.height = Math.trunc(Number(val.value));
 	  }, err => {
 		console.log('No height: ', err);
 	  });
 
 	this.healthKit.readWeight({ unit: 'lb' }).then(val => {
 	  this.currentWeight = val.value;
+	  this.weight = val.value;
 	  }, err => {
 		console.log('No weight: ', err);
 	  });
@@ -151,15 +153,9 @@ export class P1Page implements OnInit {
 	this.healthKit.readDateOfBirth().then(val => {
 	  this.age = val.split("T")[0];
 	  const birthdate = new Date(this.age);
-
-	  // Get the current date
 	  const now = new Date();
-
-	// Calculate the difference in milliseconds between the birthdate and now
 	  const diffMs = now.valueOf() - birthdate.valueOf();
-
-	// Convert the difference to years
-	  this.age = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365.25)).toString();
+	  this.age = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365.25));
 
 	  console.log("Age: " + this.age);
 	//   this.age = this.diff_years(new Date(new Date().getTime() - 24 * 60 * 60 * 1000), new Date(val.split("T")[0])).toString();
@@ -216,8 +212,8 @@ export class P1Page implements OnInit {
   async ngOnInit() {
 	await this.getCurrentPosition();
 	this.getWeather();
-	this.queryData(this.firestore, "sampleUsername@gmail.com")
-	this.writeData(this.firestore)
+	// this.queryData(this.firestore, "sampleUsername@gmail.com")
+	// this.writeData(this.firestore)
   }
 
   async getCurrentPosition() {
@@ -238,6 +234,8 @@ export class P1Page implements OnInit {
   async buttonTest() {
 	console.log("HEIGHT:", this.height)
 	console.log("WEIGHT:", this.weight)
+	console.log(this._testService.username)
+	console.log(this._testService.password)
 	
 	//const db = getFirestore()
 	//const temp2 = {name: "joe", height: this.height, weight: this.weight}
