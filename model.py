@@ -89,6 +89,8 @@ class WaterUser:
     # returns a list of top 5 recommendations
     def getOptionRecommendations(self):
         n = int(len(self.drinkWeights) * 0.2)
+        if n > 5:
+            n = 5
         print("N:", n)
         drinks = sorted(self.drinkWeights.items(), key=lambda item: item[1], reverse=True)[:n]
         drinks = [item[0] for item in drinks]
