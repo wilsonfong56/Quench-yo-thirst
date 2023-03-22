@@ -30,7 +30,7 @@ if __name__ == "__main__":
     #data_list = list()
     # for data in firestore_client.collection("profile"):
     #     print(data)
-    doc_ref = firestore_client.collection("profile").document("final4")
+    doc_ref = firestore_client.collection("profile").document("tim")
     #doc_ref = firestore_client.collection("regressorResult").document("test")
     doc = doc_ref.get()
     # if doc.exists:

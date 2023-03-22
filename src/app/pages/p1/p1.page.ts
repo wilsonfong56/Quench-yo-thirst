@@ -46,7 +46,7 @@ export class P1Page implements OnInit {
   height_ft = "No Data";
   height_in = "No Data";
   currentWeight = "No Data";
-  heartRate = "No Data";
+  heartRate = 0;
   city = "No Data";
   gender = "No Data";
   age = 0;
@@ -110,8 +110,9 @@ export class P1Page implements OnInit {
 		// location: this._testService.city,
 		weather: this.temp,
 		lastSevenDays: [0,0,0,0,0,0,0],
-		recLastSevenDays: [0,0,0,0,0,0,0]
+		recLastSevenDays: [0,0,0,0,0,0,0],
 		// drinksList: {}
+		heartrate: this.heartRate
 	});
   };
 
@@ -133,6 +134,7 @@ export class P1Page implements OnInit {
 			this.weight = doc.data()["weight"];
 			this.gender = doc.data()["gender"];
 			this.age = doc.data()["age"];
+			this.heartRate = doc.data()["heartrate"]
 		  })
 	  }
 	console.log(queryTester.size);
@@ -212,7 +214,7 @@ export class P1Page implements OnInit {
 
 	this.healthKit.querySampleType(heartOptions).then(data => {
 	  let heartRate = data.reduce((a: any, b: any) => a + b.quantity, 0);
-	  this.heartRate = (heartRate / data.length).toString();
+	  this.heartRate = (heartRate / data.length);
 	}, err => {
 	  console.log('No heartrate: ', err);
 	});

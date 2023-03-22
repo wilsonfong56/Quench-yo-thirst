@@ -102,6 +102,8 @@ export class P2Page implements OnInit {
 
   subtractDrunkWater(){
 	  this.todaysRec -= this.intake;
+    this.todaysRec = Math.round(this.todaysRec * 10) / 10;
+		this.todaysRec = Number(this.todaysRec.toFixed(1));
     this.updateAmountDrank(this.intake);
   }
 
@@ -115,6 +117,7 @@ export class P2Page implements OnInit {
     queryTester.forEach((doc) => {
         this._testService.temp = doc.data()["lastSevenDays"];
         this._testService.temp[this._testService.temp.length - 1] += Number(val);
+        console.log(this._testService.temp)
       })
 
     await updateDoc(doc(f, 'profile', this._testService.username), {	
@@ -123,10 +126,6 @@ export class P2Page implements OnInit {
       });
 
     }
-  
-
-
- 
 
 
 }

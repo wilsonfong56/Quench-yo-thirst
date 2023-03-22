@@ -30,7 +30,7 @@ if __name__ == "__main__":
     #     }
     # )
 
-    profile = model.WaterUser("final4")
+    profile = model.WaterUser("tim")
     profile.updateDaily()
     while(True):
         print(profile.getOptionRecommendations())

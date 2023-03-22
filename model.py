@@ -74,9 +74,10 @@ class WaterUser:
         try: 
             self.lastUpdate = self.doc_dict["lastUpdate"]
         except:
-            today = date.today()
-            d1 = today.strftime("%d/%m/%Y")
-            self.lastUpdate = d1
+            # today = date.today()
+            # d1 = today.strftime("%d/%m/%Y")
+            # self.lastUpdate = d1
+            self.lastUpdate = ""
             self.doc_ref.set({"lastUpdate": self.lastUpdate}, merge=True)
 
         self.waterRec = self.recWater() # get daily water recommendation
@@ -87,7 +88,8 @@ class WaterUser:
 
     # returns a list of top 5 recommendations
     def getOptionRecommendations(self):
-        n = 5
+        n = int(len(self.drinkWeights) * 0.2)
+        print("N:", n)
         drinks = sorted(self.drinkWeights.items(), key=lambda item: item[1], reverse=True)[:n]
         drinks = [item[0] for item in drinks]
         drinkRecs = {}
@@ -136,7 +138,7 @@ class WaterUser:
         for i in range(-1, -4, -1):
             if(self.recentWaterUse[i] < self.recentWaterRec[i]):
                 daysMissed += 1
-        if daysMissed = 3:
+        if daysMissed == 3:
             recommended_water *= 0.98
         self.doc_ref.set({"recommendedWater": math.ceil(recommended_water)}, merge=True)
         return math.ceil(recommended_water)
@@ -150,7 +152,7 @@ class WaterUser:
             self.recentWaterUse.pop(0)
             self.recentWaterUse.append(0)
             self.recentWaterRec.pop(0)
-            self.recentWaterRec.append(self.recWater())
+            self.recentWaterRec.append(self.waterRec)
             self.doc_ref.update({"recLastSevenDays": self.recentWaterRec})
             self.doc_ref.update({"lastSevenDays": self.recentWaterUse})
             self.doc_ref.update({"lastUpdate": d1})

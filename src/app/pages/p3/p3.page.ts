@@ -86,13 +86,14 @@ export class P3Page implements AfterViewInit {
 
   lineChartMethod() {
     console.log("CHART")
+
     this.lineChart = new Chart(this.lineCanvas.nativeElement, {
       type: 'line',
       data: {
         labels: this.getDates(),
         datasets: [
           {
-            label: 'Water Recommendation',
+            label: 'Water Drank',
             fill: false,
             backgroundColor: 'rgba(75,192,192,0.4)',
             borderColor: 'rgba(75,192,192,1)',
@@ -113,7 +114,7 @@ export class P3Page implements AfterViewInit {
             spanGaps: false,
           },
 		  {
-            label: 'Water Drank',
+            label: 'Water Recommendation',
             fill: false,
             backgroundColor: 'rgba(245, 90, 66,0.4)',
             borderColor: 'rgba(245, 90, 66,1)',
