@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  apiKey: 'fa845a8dfaa2d70c613ea149690dc198',
+  apiKey: 'YOUR_API_KEY',
   firebase: {
-    apiKey: "AIzaSyBVD67YFUBLEmE1xiRpW4dMhjRc38BJ24U",
+    apiKey: "YOUR_API_KEY",
     authDomain: "quench-yo-thirst-uci.firebaseapp.com",
     projectId: "quench-yo-thirst-uci",
     storageBucket: "quench-yo-thirst-uci.appspot.com",
